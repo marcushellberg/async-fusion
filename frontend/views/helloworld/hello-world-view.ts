@@ -11,14 +11,20 @@ export class HelloWorldView extends View {
   @state()
   private saved: string[] = [];
 
+  @state()
+  private loading = false;
+
   render() {
     return html`
       <vaadin-text-field
         label="Your name"
         .value=${this.name}
+        ?disabled=${this.loading}
         @value-changed=${this.nameChanged}
       ></vaadin-text-field>
-      <vaadin-button @click=${this.save}>Save</vaadin-button>
+      <vaadin-button @click=${this.save} ?disabled=${this.loading}>
+        ${this.loading ? "Saving..." : "Save"}
+      </vaadin-button>
 
       <ul>
         ${this.saved.map((name) => html` <li>${name}</li> `)}
@@ -31,8 +37,10 @@ export class HelloWorldView extends View {
   }
 
   async save() {
+    this.loading = true;
     const savedName = await saveUser(this.name);
     this.saved = [...this.saved, savedName];
     this.name = "";
+    this.loading = false;
   }
 }
