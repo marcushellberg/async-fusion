@@ -30,7 +30,8 @@ export class HelloWorldView extends View {
   }
 
   async save() {
-    this.saved = [...this.saved, await saveUser(this.name)];
+    const savedName = await saveUser(this.name);
+    this.saved = [...this.saved, savedName];
     this.name = "";
   }
 }
